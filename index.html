@@ -289,6 +289,7 @@ function person(p){
       return `<li>${left}${x}</div></li>`}
     const m=P.filter((q,j)=>j!==i&&s.c[j]&&fam(s.c[j]).some(r=>fam(b.c).includes(r))&&(d.lr[s.c[j]]||s.l)===(d.lr[b.c]||s.l));
     let tk=d.t[b.c]||[];if(st.d==="sun"&&b.c==="L"&&b.a==="09:00"&&!["Aurélien","Sam","Raf"].includes(p))tk=tk.filter(t=>t!=="Communiquer sur Slack");
+    if(st.d==="sat"&&b.c==="L"&&b.a==="09:00")tk=tk.filter(t=>t!=="Accueillir les participants"&&t!=="Communiquer sur Slack");
     if(st.d==="sat"&&b.c==="L"&&b.a==="10:20")tk=["Garder la salle en ordre",...(["Aurélien","Sam","Raf"].includes(p)?["Communiquer sur Slack"]:[])];
     let x=`<div class="card${now?" now":""}"><div class="top">${pill(b.c)}${now?'<span class="live">En cours</span>':""}</div>`;
     x+=`<div class="meta"><span>Lieu <b>${d.lr[b.c]||s.l}</b></span>${m.length?`<span>Avec <b>${m.join(", ")}</b></span>`:""}</div>`;
