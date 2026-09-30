@@ -61,7 +61,7 @@ h1 em{font-style:normal;color:var(--accent)}
 .q{font:800 clamp(52px,14vw,112px)/.9 var(--display);letter-spacing:-.03em;margin:0;text-wrap:balance}
 .q em{font-style:normal;color:var(--accent)}
 .askf{display:grid;gap:12px}
-.askf label{font-size:15px;color:var(--muted)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .sel{position:relative}
 .sel::after{content:"";position:absolute;right:20px;top:50%;width:10px;height:10px;border-right:2.5px solid var(--ink);border-bottom:2.5px solid var(--ink);transform:translateY(-70%) rotate(45deg);pointer-events:none}
 .sel select{appearance:none;-webkit-appearance:none;width:100%;font:600 20px/1.2 var(--body);color:var(--ink);background:var(--surface);border:2px solid var(--ink);border-radius:14px;padding:17px 52px 17px 18px;min-height:60px;cursor:pointer}
@@ -199,14 +199,9 @@ tr.now th::after{content:"maintenant";display:block;margin-top:4px;font-size:10p
 <body>
 <section class="ask" id="ask">
   <div class="ask-in">
-    <div class="eyebrow"><span class="stars" aria-hidden="true">
-      <svg width="9" height="9" viewBox="0 0 10 10"><path fill="currentColor" d="M5 0l1.2 3.6H10L7 5.8l1.1 3.7L5 7.3 1.9 9.5 3 5.8 0 3.6h3.8z"/></svg>
-      <svg width="9" height="9" viewBox="0 0 10 10"><path fill="currentColor" d="M5 0l1.2 3.6H10L7 5.8l1.1 3.7L5 7.3 1.9 9.5 3 5.8 0 3.6h3.8z"/></svg>
-      <svg width="9" height="9" viewBox="0 0 10 10"><path fill="currentColor" d="M5 0l1.2 3.6H10L7 5.8l1.1 3.7L5 7.3 1.9 9.5 3 5.8 0 3.6h3.8z"/></svg>
-    </span>HackVS · 3–4 octobre 2026</div>
     <h1 class="q">Salut !<br><em>Tu es qui ?</em></h1>
     <form class="askf" id="askf">
-      <label for="who">Choisis ton prénom pour voir ton planning.</label>
+      <label for="who" class="sr">Ton prénom</label>
       <div class="sel"><select id="who"></select></div>
       <button type="submit" class="go" id="go" disabled>Voir mon planning <span aria-hidden="true">→</span></button>
     </form>
