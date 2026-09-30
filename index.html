@@ -49,10 +49,31 @@ h1 em{font-style:normal;color:var(--accent)}
 .days button b{font:700 16px/1.1 var(--display)}
 .days button span{font:500 12px/1 var(--mono);color:var(--muted)}
 .days button[aria-pressed="true"]{background:var(--surface);box-shadow:0 1px 2px rgb(0 0 0/.08),0 0 0 1px var(--line)}
-.names{display:flex;flex-wrap:wrap;gap:6px}
-.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;font-weight:500;font-size:14px;transition:border-color .15s,background .15s}
-.chip:hover{border-color:var(--muted)}
-.chip[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.topbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}
+.ghost{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:8px 14px;font-weight:600;font-size:14px;min-height:40px}
+.ghost:hover{border-color:var(--muted)}
+.link{border:0;background:none;padding:4px 0;font-size:14px;font-weight:600;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.link:hover{color:var(--ink)}
+
+/* welcome screen */
+.ask{min-height:100vh;min-height:100svh;display:grid;place-items:center;padding:32px 20px;background:var(--bg)}
+.ask-in{width:100%;max-width:560px;display:grid;gap:28px}
+.q{font:800 clamp(52px,14vw,112px)/.9 var(--display);letter-spacing:-.03em;margin:0;text-wrap:balance}
+.q em{font-style:normal;color:var(--accent)}
+.askf{display:grid;gap:12px}
+.askf label{font-size:15px;color:var(--muted)}
+.sel{position:relative}
+.sel::after{content:"";position:absolute;right:20px;top:50%;width:10px;height:10px;border-right:2.5px solid var(--ink);border-bottom:2.5px solid var(--ink);transform:translateY(-70%) rotate(45deg);pointer-events:none}
+.sel select{appearance:none;-webkit-appearance:none;width:100%;font:600 20px/1.2 var(--body);color:var(--ink);background:var(--surface);border:2px solid var(--ink);border-radius:14px;padding:17px 52px 17px 18px;min-height:60px;cursor:pointer}
+.sel select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.go{display:flex;align-items:center;justify-content:center;gap:10px;border:0;border-radius:14px;background:var(--accent);color:var(--on-accent);font:700 19px/1 var(--display);min-height:60px;padding:0 22px;transition:opacity .15s,transform .15s}
+.go:disabled{opacity:.35;cursor:not-allowed}
+.go:not(:disabled):hover{transform:translateY(-1px)}
+
+/* discreet "someone else" picker */
+.peek{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14px;color:var(--muted);padding-top:6px}
+.peek select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 8px}
+.other{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;background:var(--surface-2);border-radius:10px;padding:10px 14px;font-size:14px}
 
 /* role pills */
 .pill{display:inline-flex;align-items:center;gap:6px;font:600 12.5px/1 var(--body);padding:5px 10px;border-radius:6px;white-space:nowrap}
@@ -138,10 +159,11 @@ tr.now th::after{content:"maintenant";display:block;margin-top:4px;font-size:10p
   .controls{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);margin-inline:-16px;padding:10px 16px;gap:10px;border-bottom:1px solid var(--line)}
   .days{display:grid;max-width:none}
   .days button{padding:8px 12px;min-height:48px}
-  .names{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-inline:-16px;padding-inline:16px;scroll-padding-inline:16px}
-  .names::-webkit-scrollbar{display:none}
-  .chip{flex:none;min-height:40px;padding:8px 16px;font-size:15px}
-  #out{scroll-margin-top:150px}
+  .ask{padding:24px 16px}
+  .ask-in{gap:24px}
+  .go{width:100%}
+  .peek select{font-size:16px;padding:8px 10px}
+  .other{font-size:15px}
   .phead{padding-bottom:12px}
   .tl>li{grid-template-columns:minmax(0,1fr)}
   .rail{display:none}
@@ -175,20 +197,33 @@ tr.now th::after{content:"maintenant";display:block;margin-top:4px;font-size:10p
 <style>body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
-<div class="wrap">
-  <header>
+<section class="ask" id="ask">
+  <div class="ask-in">
     <div class="eyebrow"><span class="stars" aria-hidden="true">
       <svg width="9" height="9" viewBox="0 0 10 10"><path fill="currentColor" d="M5 0l1.2 3.6H10L7 5.8l1.1 3.7L5 7.3 1.9 9.5 3 5.8 0 3.6h3.8z"/></svg>
       <svg width="9" height="9" viewBox="0 0 10 10"><path fill="currentColor" d="M5 0l1.2 3.6H10L7 5.8l1.1 3.7L5 7.3 1.9 9.5 3 5.8 0 3.6h3.8z"/></svg>
       <svg width="9" height="9" viewBox="0 0 10 10"><path fill="currentColor" d="M5 0l1.2 3.6H10L7 5.8l1.1 3.7L5 7.3 1.9 9.5 3 5.8 0 3.6h3.8z"/></svg>
     </span>HackVS · 3–4 octobre 2026</div>
-    <h1>Planning <em>des équipes</em></h1>
-    <p class="lede">Choisis ton nom pour voir tes créneaux, avec qui tu es et ce que tu dois faire.</p>
-  </header>
+    <h1 class="q">Salut !<br><em>Tu es qui ?</em></h1>
+    <form class="askf" id="askf">
+      <label for="who">Choisis ton prénom pour voir ton planning.</label>
+      <div class="sel"><select id="who"></select></div>
+      <button type="submit" class="go" id="go" disabled>Voir mon planning <span aria-hidden="true">→</span></button>
+    </form>
+  </div>
+</section>
 
-  <section class="controls" aria-label="Filtres">
+<div class="wrap" id="app" hidden>
+  <section class="controls" aria-label="Navigation">
+    <div class="topbar">
+      <div class="eyebrow"><span class="stars" aria-hidden="true">
+        <svg width="9" height="9" viewBox="0 0 10 10"><path fill="currentColor" d="M5 0l1.2 3.6H10L7 5.8l1.1 3.7L5 7.3 1.9 9.5 3 5.8 0 3.6h3.8z"/></svg>
+        <svg width="9" height="9" viewBox="0 0 10 10"><path fill="currentColor" d="M5 0l1.2 3.6H10L7 5.8l1.1 3.7L5 7.3 1.9 9.5 3 5.8 0 3.6h3.8z"/></svg>
+        <svg width="9" height="9" viewBox="0 0 10 10"><path fill="currentColor" d="M5 0l1.2 3.6H10L7 5.8l1.1 3.7L5 7.3 1.9 9.5 3 5.8 0 3.6h3.8z"/></svg>
+      </span>HackVS</div>
+      <button type="button" class="ghost" id="cal"></button>
+    </div>
     <div class="days" id="days"></div>
-    <div class="names" id="names"></div>
   </section>
 
   <main id="out"></main>
@@ -252,10 +287,13 @@ function today(){const n=new Date(),p=v=>String(v).padStart(2,"0");return{iso:`$
 function end(b){const m=b.match(/^(\d{1,2})[:h](\d{2})?/);return m?`${m[1].padStart(2,"0")}:${m[2]||"00"}`:"23:59"}
 function isNow(dk,a,b){const t=today();return D[dk].iso===t.iso&&t.hm>=a&&t.hm<end(b)}
 
-let st={d:"sat",p:null};
-try{const s=JSON.parse(localStorage.getItem("hackvs-planning")||"{}");if(D[s.d])st.d=s.d;if(P.includes(s.p))st.p=s.p}catch(e){}
+// view: "ask" (welcome question) or "app"; p: person shown (null = everyone's calendar); me: who the viewer said they are
+let st={view:"ask",d:"sat",p:null,me:null};
+try{const s=JSON.parse(localStorage.getItem("hackvs-planning")||"{}");if(D[s.d])st.d=s.d;if(P.includes(s.me))st.me=s.me}catch(e){}
 if(today().iso===D.sun.iso)st.d="sun";else if(today().iso===D.sat.iso)st.d="sat";
-function save(){try{localStorage.setItem("hackvs-planning",JSON.stringify(st))}catch(e){}}
+function save(){try{localStorage.setItem("hackvs-planning",JSON.stringify({d:st.d,me:st.me}))}catch(e){}}
+const CAL=`<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M1.5 6.5h13M5 1v3M11 1v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>`;
+const ME=`<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="5.5" r="3" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M2.5 14.5c.8-3 3-4.5 5.5-4.5s4.7 1.5 5.5 4.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>`;
 
 function bg(c){return c==="MG"?"linear-gradient(90deg,var(--M1),var(--G1))":`var(--${K[c]}1)`}
 function fam(c){return c==="MG"?[R.M,R.G]:[R[c]]}
@@ -267,7 +305,7 @@ function overview(){
   P.forEach((_,i)=>{let k=0;while(k<n){const c=d.s[k].c[i];let j=k;while(j+1<n&&d.s[j+1].c[i]===c)j++;span[k][i]=j-k+1;for(let m=k+1;m<=j;m++)span[m][i]=0;k=j+1}});
   const used=[...new Set(d.s.flatMap(s=>s.c).filter(Boolean).map(c=>R[c]))];
   const legend=Object.keys(R).filter((c,ix,arr)=>used.includes(R[c])&&arr.findIndex(x=>R[x]===R[c])===ix).map(pill).join("");
-  let h=`<div style="display:grid;gap:12px"><p class="hint">Choisis un nom pour voir ses consignes détaillées.</p><div class="gridwrap"><div class="legend">${legend}</div><div class="gridbox"><table><thead><tr><th></th>${P.map(p=>`<th><button type="button" data-p="${p}">${p}</button></th>`).join("")}</tr></thead><tbody>`;
+  let h=`<div style="display:grid;gap:12px"><div><h2 style="font:800 clamp(26px,4vw,36px)/1.05 var(--display);margin:0 0 6px">Planning de tout le monde</h2><p class="hint">Touche un prénom pour voir ses consignes détaillées.</p></div><div class="gridwrap"><div class="legend">${legend}</div><div class="gridbox"><table><thead><tr><th></th>${P.map(p=>`<th><button type="button" data-p="${p}">${p}</button></th>`).join("")}</tr></thead><tbody>`;
   d.s.forEach((s,k)=>{
     h+=`<tr class="${isNow(st.d,s.a,s.b)?"now":""}"><th><b>${s.a}</b><i>à ${s.b}</i></th>`;
     P.forEach((_,i)=>{const r=span[k][i];if(!r)return;const c=s.c[i];
@@ -278,9 +316,12 @@ function overview(){
 function person(p){
   const d=D[st.d],i=P.indexOf(p),bl=blocks(p,st.d);
   const work=bl.filter(b=>b.c!=="P");
-  let h=`<div class="person"><div class="phead"><div><h2>${p}</h2><p>${d.n} ${d.dt}${work.length?` · de ${bl[0].a} à ${bl[bl.length-1].b}`:""}</p></div>`;
-  h+=`</div>`;
-  if(!bl.length)return h+`<div class="empty-day">Pas de créneau ce jour-là.</div></div>`;
+  const mine=p===st.me;
+  let h=`<div class="person">`;
+  if(!mine)h+=`<div class="other"><span>Tu regardes le planning de <b>${p}</b></span>${st.me?`<button type="button" class="link" data-p="${st.me}">Revenir au mien</button>`:""}</div>`;
+  h+=`<div class="phead"><div><h2>${mine?`Salut ${p}`:p}</h2><p>${d.n} ${d.dt}${work.length?` · de ${bl[0].a} à ${bl[bl.length-1].b}`:""}</p></div>${mine?`<button type="button" class="link" id="change">Pas toi ?</button>`:""}</div>`;
+  const peek=`<div class="peek"><label for="peek">Voir le planning de</label><select id="peek"><option value="">quelqu'un d'autre…</option>${P.filter(q=>q!==p).map(q=>`<option>${q}</option>`).join("")}</select></div>`;
+  if(!bl.length)return h+`<div class="empty-day">Pas de créneau ce jour-là.</div>${peek}</div>`;
   h+=`<ol class="tl">`+bl.map(b=>{
     const s=d.s[b.st],k=K[b.c],now=d.s.slice(b.st,b.e+1).some(x=>isNow(st.d,x.a,x.b));
     const left=`<div class="time">${b.a}<small>${b.b}</small></div><div class="rail"><span class="dot" style="color:var(--${k}2)"></span></div>`;
@@ -296,21 +337,30 @@ function person(p){
     if(tk.length)x+=`<ul class="tasks">${tk.map(t=>`<li>${t}</li>`).join("")}</ul>`;
     if(b.c==="O"||(st.d==="sun"&&b.c==="S"))x+=`<div class="prog"><b>Programme</b><ol>${PROG.map(([t,v])=>`<li><time>${t}</time><span>${v}</span></li>`).join("")}</ol></div>`;
     if(st.d==="sat"&&fam(b.c).includes(R.G)&&/fermeture/.test(b.b))x+=`<div class="alert">${ICON}<div><b>Équipe de clôture</b><ul><li>Faire sortir tout le monde à 21h</li><li>Garder les pitchs A3 des participants : soit les amener à la SBB, soit les garder en bas et les monter le lendemain</li></ul></div></div>`;
-    return `<li>${left}${x}</div></li>`}).join("")+`</ol></div>`;
+    return `<li>${left}${x}</div></li>`}).join("")+`</ol>${peek}</div>`;
   return h}
 
-function render(){
-  document.getElementById("days").innerHTML=Object.entries(D).map(([k,d])=>`<button type="button" aria-pressed="${k===st.d}" data-d="${k}"><b>${d.n}</b><span>${d.dt}</span></button>`).join("");
-  document.getElementById("names").innerHTML=`<button type="button" class="chip" aria-pressed="${!st.p}" data-p="">Tout le monde</button>`+P.map(p=>`<button type="button" class="chip" aria-pressed="${p===st.p}" data-p="${p}">${p}</button>`).join("");
-  document.getElementById("out").innerHTML=st.p?person(st.p):overview();
-  const nm=document.getElementById("names"),sel=nm.querySelector('[aria-pressed="true"]');
-  if(sel&&nm.scrollWidth>nm.clientWidth)nm.scrollLeft=sel.offsetLeft-nm.offsetLeft-(nm.clientWidth-sel.offsetWidth)/2;
-  save()}
+const $=id=>document.getElementById(id);
+$("who").innerHTML=`<option value="" disabled selected>Choisis ton prénom</option>`+P.map(p=>`<option>${p}</option>`).join("");
 
+function render(){
+  $("ask").hidden=st.view!=="ask";$("app").hidden=st.view==="ask";
+  if(st.view==="ask"){$("who").value=st.me||"";$("go").disabled=!st.me;save();return}
+  $("days").innerHTML=Object.entries(D).map(([k,d])=>`<button type="button" aria-pressed="${k===st.d}" data-d="${k}"><b>${d.n}</b><span>${d.dt}</span></button>`).join("");
+  $("cal").innerHTML=st.p||!st.me?`${CAL}Planning de tout le monde`:`${ME}Mon planning`;
+  $("out").innerHTML=st.p?person(st.p):overview();
+  save()}
+function go(p){st.view="app";st.p=p;render();window.scrollTo(0,0)}
+
+$("who").addEventListener("change",()=>{$("go").disabled=!$("who").value});
+$("askf").addEventListener("submit",e=>{e.preventDefault();const v=$("who").value;if(!v)return;st.me=v;go(v)});
+document.addEventListener("change",e=>{if(e.target.id==="peek"&&e.target.value)go(e.target.value)});
 document.addEventListener("click",e=>{
   const b=e.target.closest("button");if(!b)return;
   if(b.dataset.d){st.d=b.dataset.d;render()}
-  else if("p" in b.dataset){st.p=b.dataset.p||null;render();if(st.p)document.getElementById("out").scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"start"})}
+  else if("p" in b.dataset)go(b.dataset.p||null);
+  else if(b.id==="cal")go(st.p||!st.me?null:st.me);
+  else if(b.id==="change"){st.view="ask";st.me=null;render();window.scrollTo(0,0)}
 });
 render();
 </script>
