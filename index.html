@@ -69,6 +69,18 @@ h1 em{font-style:normal;color:var(--accent)}
 .sel select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .go{display:flex;align-items:center;justify-content:center;gap:10px;border:0;border-radius:14px;background:var(--accent);color:var(--on-accent);font:700 19px/1 var(--display);min-height:60px;padding:0 22px;transition:opacity .15s,transform .15s}
 .go:disabled{opacity:.35;cursor:not-allowed}
+.go span{display:inline-block;transition:transform .2s ease}
+.go:not(:disabled):hover span{transform:translateX(4px)}
+
+/* transition from the question to the planning */
+.ask{transition:opacity .38s ease,transform .38s cubic-bezier(.5,0,.75,0)}
+.ask.leaving{opacity:0;transform:translateY(-36px) scale(.97)}
+.ask.leaving .go span{transform:translateX(18px);transition-duration:.3s}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{opacity:0;transform:scale(.4)}70%{transform:scale(1.25)}100%{opacity:1;transform:none}}
+#app.enter .controls,#app.enter .other,#app.enter .phead,#app.enter .tl>li,#app.enter .peek,#app.enter .help{animation:rise .55s cubic-bezier(.2,.75,.25,1) backwards;animation-delay:calc(var(--i,0)*70ms + 60ms)}
+#app.enter .dot{animation:pop .45s cubic-bezier(.3,.8,.3,1.2) backwards;animation-delay:calc(var(--i,0)*70ms + 220ms)}
+@media (prefers-reduced-motion:reduce){.ask,.ask.leaving{transition:none;transform:none}#app.enter *{animation:none!important}}
 .go:not(:disabled):hover{transform:translateY(-1px)}
 
 /* discreet "someone else" picker */
@@ -224,7 +236,7 @@ tr.now th::after{content:"maintenant";display:block;margin-top:4px;font-size:10p
 
   <main id="out"></main>
 
-  <section class="help" aria-label="Contacts">
+  <section class="help" aria-label="Contacts" style="--i:7">
     <h3>Un participant pose une question et tu n'as pas la réponse ?</h3>
     <div class="contact">
       <span>Challenges ou hackathon</span>
@@ -314,16 +326,16 @@ function person(p){
   const work=bl.filter(b=>b.c!=="P");
   const mine=p===st.me;
   let h=`<div class="person">`;
-  if(!mine)h+=`<div class="other"><span>Tu regardes le planning de <b>${p}</b></span>${st.me?`<button type="button" class="link" data-p="${st.me}">Revenir au mien</button>`:""}</div>`;
-  h+=`<div class="phead"><div><h2>${mine?`Salut ${p}`:p}</h2><p>${d.n} ${d.dt}${work.length?` · de ${bl[0].a} à ${bl[bl.length-1].b}`:""}</p></div>${mine?`<button type="button" class="link" id="change">Pas toi ?</button>`:""}</div>`;
-  const peek=`<div class="peek"><label for="peek">Voir le planning de</label><select id="peek"><option value="">quelqu'un d'autre…</option>${P.filter(q=>q!==p).map(q=>`<option>${q}</option>`).join("")}</select></div>`;
+  if(!mine)h+=`<div class="other" style="--i:1"><span>Tu regardes le planning de <b>${p}</b></span>${st.me?`<button type="button" class="link" data-p="${st.me}">Revenir au mien</button>`:""}</div>`;
+  h+=`<div class="phead" style="--i:1"><div><h2>${mine?`Salut ${p}`:p}</h2><p>${d.n} ${d.dt}${work.length?` · de ${bl[0].a} à ${bl[bl.length-1].b}`:""}</p></div>${mine?`<button type="button" class="link" id="change">Pas toi ?</button>`:""}</div>`;
+  const peek=`<div class="peek" style="--i:${bl.length+2}"><label for="peek">Voir le planning de</label><select id="peek"><option value="">quelqu'un d'autre…</option>${P.filter(q=>q!==p).map(q=>`<option>${q}</option>`).join("")}</select></div>`;
   if(!bl.length)return h+`<div class="empty-day">Pas de créneau ce jour-là.</div>${peek}</div>`;
-  h+=`<ol class="tl">`+bl.map(b=>{
-    const s=d.s[b.st],k=K[b.c],now=d.s.slice(b.st,b.e+1).some(x=>isNow(st.d,x.a,x.b));
+  h+=`<ol class="tl">`+bl.map((b,n)=>{
+    const s=d.s[b.st],k=K[b.c],now=d.s.slice(b.st,b.e+1).some(x=>isNow(st.d,x.a,x.b)),li=`<li style="--i:${n+2}">`;
     const left=`<div class="time">${b.a}<small>${b.b}</small></div><div class="rail"><span class="dot" style="color:var(--${k}2)"></span></div>`;
     if(b.c==="P"){let x=`<div class="card pause"><div class="top">${pill("P")}${now?'<span class="live">En cours</span>':""}</div>`;
       if(st.d==="sun"&&b.a==="12:00")x+=`<div class="alert">${ICON}<div><b>Toujours 2 personnes dans la salle</b>Pour accueillir les visiteurs. Organisation sur place entre nous.</div></div>`;
-      return `<li>${left}${x}</div></li>`}
+      return `${li}${left}${x}</div></li>`}
     const m=P.filter((q,j)=>j!==i&&s.c[j]&&fam(s.c[j]).some(r=>fam(b.c).includes(r))&&(d.lr[s.c[j]]||s.l)===(d.lr[b.c]||s.l));
     let tk=d.t[b.c]||[];if(st.d==="sun"&&b.c==="L"&&b.a==="09:00"&&!["Aurélien","Sam","Raf"].includes(p))tk=tk.filter(t=>t!=="Communiquer sur Slack");
     if(st.d==="sat"&&b.c==="L"&&b.a==="09:00")tk=tk.filter(t=>t!=="Accueillir les participants"&&t!=="Communiquer sur Slack");
@@ -333,7 +345,7 @@ function person(p){
     if(tk.length)x+=`<ul class="tasks">${tk.map(t=>`<li>${t}</li>`).join("")}</ul>`;
     if(b.c==="O"||(st.d==="sun"&&b.c==="S"))x+=`<div class="prog"><b>Programme</b><ol>${PROG.map(([t,v])=>`<li><time>${t}</time><span>${v}</span></li>`).join("")}</ol></div>`;
     if(st.d==="sat"&&fam(b.c).includes(R.G)&&/fermeture/.test(b.b))x+=`<div class="alert">${ICON}<div><b>Équipe de clôture</b><ul><li>Faire sortir tout le monde à 21h</li><li>Garder les pitchs A3 des participants : soit les amener à la SBB, soit les garder en bas et les monter le lendemain</li></ul></div></div>`;
-    return `<li>${left}${x}</div></li>`}).join("")+`</ol>${peek}</div>`;
+    return `${li}${left}${x}</div></li>`}).join("")+`</ol>${peek}</div>`;
   return h}
 
 const $=id=>document.getElementById(id);
@@ -351,7 +363,11 @@ function render(){
 function go(p){st.view="app";st.p=p;render();window.scrollTo(0,0)}
 
 $("who").addEventListener("change",()=>{$("go").disabled=!$("who").value});
-$("askf").addEventListener("submit",e=>{e.preventDefault();const v=$("who").value;if(!v)return;st.me=v;go(v)});
+$("askf").addEventListener("submit",e=>{
+  e.preventDefault();const v=$("who").value;if(!v||$("ask").classList.contains("leaving"))return;st.me=v;
+  if(matchMedia("(prefers-reduced-motion:reduce)").matches){go(v);return}
+  $("ask").classList.add("leaving");
+  setTimeout(()=>{$("app").classList.add("enter");go(v);$("ask").classList.remove("leaving");setTimeout(()=>$("app").classList.remove("enter"),1800)},380)});
 document.addEventListener("change",e=>{if(e.target.id==="peek"&&e.target.value)go(e.target.value)});
 document.addEventListener("click",e=>{
   const b=e.target.closest("button");if(!b)return;
