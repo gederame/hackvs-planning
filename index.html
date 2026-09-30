@@ -269,9 +269,9 @@ sat:{n:"Samedi",dt:"3 octobre",iso:"2026-10-03",lr:{AK:"Kiosk",AS:"Salle 2",LC:"
 ["12:00","13:00","","P P P P P P P P P P"],
 ["13:00","14:00","Salles 1 et 2","_ G _ _ _ _ M _ _ _"],
 ["14:00","15:00","Salles 1 et 2","_ G _ _ _ G _ _ _ _"],
-["15:00","16:00","Salles 1 et 2","_ G _ _ _ G _ _ _ M"],
-["16:00","17:00","Salles 1 et 2","_ G _ _ _ G _ _ _ M"],
-["17:00","18:00","Salles 1 et 2","_ _ _ _ _ G _ _ _ M"],
+["15:00","16:00","Salles 1 et 2","_ G _ _ _ G _ _ _ MG"],
+["16:00","17:00","Salles 1 et 2","_ G _ _ _ G _ _ _ MG"],
+["17:00","18:00","Salles 1 et 2","_ _ _ _ _ G _ _ _ MG"],
 ["18:00","19:00","Salles 1 et 2","_ _ _ _ G _ MG _ _ _"],
 ["19:00","20:00","Salles 1 et 2","_ _ _ _ G _ MG _ _ _"],
 ["20:00","21h fermeture","Salles 1 et 2","_ _ _ _ G _ MG _ _ _"]],
@@ -342,7 +342,6 @@ function person(p){
     const m=P.filter((q,j)=>j!==i&&s.c[j]&&fam(s.c[j]).some(r=>fam(b.c).includes(r))&&(d.lr[s.c[j]]||s.l)===(d.lr[b.c]||s.l));
     let tk=d.t[b.c]||[];if(st.d==="sun"&&b.c==="L"&&b.a==="09:00"&&!["Aurélien","Sam","Raf","Léon"].includes(p))tk=tk.filter(t=>t!=="Communiquer sur Slack");
     if(st.d==="sat"&&b.c==="L"&&b.a==="09:00")tk=tk.filter(t=>t!=="Accueillir les participants"&&t!=="Communiquer sur Slack");
-    if(st.d==="sat"&&b.c==="M"&&p==="Macgeorge")tk=[...tk,"Communiquer sur Slack si nécessaire"];
     if(st.d==="sat"&&b.c==="L"&&b.a==="10:20")tk=["Garder la salle en ordre",...(["Aurélien","Sam","Raf","Léon"].includes(p)?["Communiquer sur Slack"]:[])];
     let x=`<div class="card${now?" now":""}"><div class="top">${pill(b.c)}${now?'<span class="live">En cours</span>':""}</div>`;
     x+=`<div class="meta"><span>Lieu <b>${d.lr[b.c]||s.l}</b></span>${m.length?`<span>Avec <b>${m.join(", ")}</b></span>`:""}</div>`;
