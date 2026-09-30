@@ -61,6 +61,7 @@ h1 em{font-style:normal;color:var(--accent)}
 .q{font:800 clamp(52px,14vw,112px)/.9 var(--display);letter-spacing:-.03em;margin:0;text-wrap:balance}
 .q em{font-style:normal;color:var(--accent)}
 .askf{display:grid;gap:12px}
+#ask[hidden],#app[hidden]{display:none!important}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .sel{position:relative}
 .sel::after{content:"";position:absolute;right:20px;top:50%;width:10px;height:10px;border-right:2.5px solid var(--ink);border-bottom:2.5px solid var(--ink);transform:translateY(-70%) rotate(45deg);pointer-events:none}
@@ -339,7 +340,9 @@ const $=id=>document.getElementById(id);
 $("who").innerHTML=`<option value="" disabled selected>Choisis ton prénom</option>`+P.map(p=>`<option>${p}</option>`).join("");
 
 function render(){
-  $("ask").hidden=st.view!=="ask";$("app").hidden=st.view==="ask";
+  const asking=st.view==="ask";
+  $("ask").hidden=!asking;$("app").hidden=asking;
+  $("ask").style.display=asking?"":"none";$("app").style.display=asking?"none":"";
   if(st.view==="ask"){$("who").value=st.me||"";$("go").disabled=!st.me;save();return}
   $("days").innerHTML=Object.entries(D).map(([k,d])=>`<button type="button" aria-pressed="${k===st.d}" data-d="${k}"><b>${d.n}</b><span>${d.dt}</span></button>`).join("");
   $("cal").innerHTML=st.p||!st.me?`${CAL}Planning de tout le monde`:`${ME}Mon planning`;
