@@ -311,14 +311,15 @@ function pill(c){return `<span class="pill" style="background:${bg(c)};color:var
 function blocks(p,dk){const d=D[dk],i=P.indexOf(p),o=[];d.s.forEach((s,k)=>{const c=s.c[i],l=o[o.length-1];if(c&&l&&l.c===c&&l.e===k-1){l.e=k;l.b=s.b}else if(c)o.push({c,st:k,e:k,a:s.a,b:s.b})});while(o.length&&o[0].c==="P")o.shift();while(o.length&&o[o.length-1].c==="P")o.pop();return o}
 
 function overview(){
+  const g=(s,i)=>s.c[i]==="P"?"":s.c[i]; // breaks stay blank in the grid
   const d=D[st.d],n=d.s.length,span=d.s.map(()=>P.map(()=>1));
-  P.forEach((_,i)=>{let k=0;while(k<n){const c=d.s[k].c[i];let j=k;while(j+1<n&&d.s[j+1].c[i]===c)j++;span[k][i]=j-k+1;for(let m=k+1;m<=j;m++)span[m][i]=0;k=j+1}});
-  const used=[...new Set(d.s.flatMap(s=>s.c).filter(Boolean).map(c=>R[c]))];
+  P.forEach((_,i)=>{let k=0;while(k<n){const c=g(d.s[k],i);let j=k;while(j+1<n&&g(d.s[j+1],i)===c)j++;span[k][i]=j-k+1;for(let m=k+1;m<=j;m++)span[m][i]=0;k=j+1}});
+  const used=[...new Set(d.s.flatMap(s=>s.c.map((_,i)=>g(s,i))).filter(Boolean).map(c=>R[c]))];
   const legend=Object.keys(R).filter((c,ix,arr)=>used.includes(R[c])&&arr.findIndex(x=>R[x]===R[c])===ix).map(pill).join("");
   let h=`<div style="display:grid;gap:12px"><div><h2 style="font:800 clamp(26px,4vw,36px)/1.05 var(--display);margin:0 0 6px">Planning de tout le monde</h2><p class="hint">Touche un prénom pour voir ses consignes détaillées.</p></div><div class="gridwrap"><div class="legend">${legend}</div><div class="gridbox"><table><thead><tr><th></th>${P.map(p=>`<th><button type="button" data-p="${p}">${p}</button></th>`).join("")}</tr></thead><tbody>`;
   d.s.forEach((s,k)=>{
     h+=`<tr class="${isNow(st.d,s.a,s.b)?"now":""}"><th><b>${s.a}</b><i>à ${s.b}</i></th>`;
-    P.forEach((_,i)=>{const r=span[k][i];if(!r)return;const c=s.c[i];
+    P.forEach((_,i)=>{const r=span[k][i];if(!r)return;const c=g(s,i);
       h+=c?`<td class="cell" rowspan="${r}" style="background:${bg(c)};color:var(--${K[c]}2)"><span>${R[c]}${d.lr[c]?`<small>${d.lr[c]}</small>`:""}</span></td>`:`<td class="cell empty" rowspan="${r}"></td>`});
     h+="</tr>"});
   return h+`</tbody></table></div></div></div>`}
