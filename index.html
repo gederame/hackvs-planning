@@ -342,12 +342,13 @@ function person(p){
     const m=P.filter((q,j)=>j!==i&&s.c[j]&&fam(s.c[j]).some(r=>fam(b.c).includes(r))&&(d.lr[s.c[j]]||s.l)===(d.lr[b.c]||s.l));
     let tk=d.t[b.c]||[];if(st.d==="sun"&&b.c==="L"&&b.a==="09:00"&&!["Aurélien","Sam","Raf","Léon"].includes(p))tk=tk.filter(t=>t!=="Communiquer sur Slack");
     if(st.d==="sat"&&b.c==="L"&&b.a==="09:00")tk=tk.filter(t=>t!=="Accueillir les participants"&&t!=="Communiquer sur Slack");
+    if(st.d==="sun"&&(b.c==="S"||b.c==="O"))tk=["Un peu avant 14h : se placer aux entrées de la salle","Accueillir le public et lui expliquer le principe du hackathon","Inviter les gens à s'asseoir pour écouter les prises de parole",...tk];
     if(st.d==="sat"&&b.c==="L"&&b.a==="10:20")tk=["Garder la salle en ordre",...(["Aurélien","Sam","Raf","Léon"].includes(p)?["Communiquer sur Slack"]:[])];
     let x=`<div class="card${now?" now":""}"><div class="top">${pill(b.c)}${now?'<span class="live">En cours</span>':""}</div>`;
     x+=`<div class="meta"><span>Lieu <b>${d.lr[b.c]||s.l}</b></span>${m.length?`<span>Avec <b>${m.join(", ")}</b></span>`:""}</div>`;
     if(tk.length)x+=`<ul class="tasks">${tk.map(t=>`<li>${t}</li>`).join("")}</ul>`;
     if(st.d==="sat"&&b.c==="M"&&b.a==="09:30")x+=`<div class="prog"><b>Déroulé du lancement</b><ol>${[["09:30","Accueil des participants (kiosk et salle 2)"],["09:45","Mot de bienvenue d'Emilie / Antoine"],["Ensuite","Présentation des sponsors (10 min chacun) et de leur challenge"],["10:20","Participants répartis par challenge, début du coaching"]].map(([t,v])=>`<li><time>${t}</time><span>${v}</span></li>`).join("")}</ol></div>`;
-    if(b.c==="O"||(st.d==="sun"&&b.c==="S"))x+=`<div class="prog"><b>Programme</b><ol>${PROG.map(([t,v])=>`<li><time>${t}</time><span>${v}</span></li>`).join("")}</ol></div>`;
+    if(b.c==="O"||(st.d==="sun"&&(b.c==="S"||(b.c==="M"&&end(b.b)>"14:00"))))x+=`<div class="prog"><b>Programme</b><ol>${PROG.map(([t,v])=>`<li><time>${t}</time><span>${v}</span></li>`).join("")}</ol></div>`;
     if(st.d==="sat"&&fam(b.c).includes(R.G)&&/fermeture/.test(b.b))x+=`<div class="alert">${ICON}<div><b>Équipe de clôture</b><ul><li>Faire sortir tout le monde à 21h</li><li>Garder les pitchs A3 des participants : soit les amener à la SBB, soit les garder en bas et les monter le lendemain</li></ul></div></div>`;
     return `${li}${left}${x}</div></li>`}).join("")+`</ol>${peek}</div>`;
   return h}
