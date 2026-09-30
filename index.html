@@ -343,6 +343,7 @@ function person(p){
     let x=`<div class="card${now?" now":""}"><div class="top">${pill(b.c)}${now?'<span class="live">En cours</span>':""}</div>`;
     x+=`<div class="meta"><span>Lieu <b>${d.lr[b.c]||s.l}</b></span>${m.length?`<span>Avec <b>${m.join(", ")}</b></span>`:""}</div>`;
     if(tk.length)x+=`<ul class="tasks">${tk.map(t=>`<li>${t}</li>`).join("")}</ul>`;
+    if(st.d==="sat"&&b.c==="M"&&b.a==="09:30")x+=`<div class="prog"><b>Déroulé du lancement</b><ol>${[["09:30","Accueil des participants (kiosk et salle 2)"],["09:45","Mot de bienvenue d'Emilie / Antoine"],["Ensuite","Présentation des sponsors (10 min chacun) et de leur challenge"],["10:20","Participants répartis par challenge, début du coaching"]].map(([t,v])=>`<li><time>${t}</time><span>${v}</span></li>`).join("")}</ol></div>`;
     if(b.c==="O"||(st.d==="sun"&&b.c==="S"))x+=`<div class="prog"><b>Programme</b><ol>${PROG.map(([t,v])=>`<li><time>${t}</time><span>${v}</span></li>`).join("")}</ol></div>`;
     if(st.d==="sat"&&fam(b.c).includes(R.G)&&/fermeture/.test(b.b))x+=`<div class="alert">${ICON}<div><b>Équipe de clôture</b><ul><li>Faire sortir tout le monde à 21h</li><li>Garder les pitchs A3 des participants : soit les amener à la SBB, soit les garder en bas et les monter le lendemain</li></ul></div></div>`;
     return `${li}${left}${x}</div></li>`}).join("")+`</ol>${peek}</div>`;
